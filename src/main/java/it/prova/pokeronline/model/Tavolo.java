@@ -39,7 +39,7 @@ public class Tavolo {
 	@Column(name = "dataCreazione")
 	private Date dataCreazione;
 
-	@ManyToMany
+	@OneToMany
 	private Set<Utente> giocatori = new HashSet<Utente>(0);
 
 	@OneToOne(fetch = FetchType.LAZY)
