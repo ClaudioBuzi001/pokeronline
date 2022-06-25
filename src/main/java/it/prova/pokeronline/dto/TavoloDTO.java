@@ -12,23 +12,24 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
- import it.prova.pokeronline.model.Tavolo;
+import it.prova.pokeronline.model.Tavolo;
+import it.prova.pokeronline.model.Utente;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TavoloDTO {
 	
 	private Long id;
+	@NotNull(message = "{esperienzaMinima.notnull}")
 	@Min(0)
 	private Integer esperienzaMinima;
+	@NotNull(message = "{cifraMinima.notnull}")
 	@Min(1)
 	private Integer cifraMinima;
-	@NotBlank
+	@NotBlank(message= "{denominazione.notblank}")
 	private String denominazione;
-	@NotNull
+	@NotNull(message = "{dataCreazione.notnull}")
 	private Date dataCreazione;
-	
 	private Set<UtenteDTO> giocatori = new HashSet<UtenteDTO>(0);
-	@NotNull
 	private UtenteDTO utenteCreazione;
 	
 	public TavoloDTO(Long id, @Min(0) Integer esperienzaMinima, @Min(1) Integer cifraMinima,
@@ -99,10 +100,16 @@ public class TavoloDTO {
 		this.utenteCreazione = utenteCreazione;
 	}
 
-//id esperienzaMinima; cifraMinima; denominazione; dataCreazione; giocatori  utenteCreazione;
 	
 	public Tavolo buildTavoloModel() {
-		return new Tavolo(this.id, this.esperienzaMinima, this.cifraMinima, this.denominazione, this.dataCreazione);
+		Tavolo result = new Tavolo(this.id, this.esperienzaMinima, this.cifraMinima, this.denominazione, this.dataCreazione);
+		
+		if(this.giocatori.size() > 1) {
+			Set<Utente> set = result.getGiocatori();
+			this.giocatori.forEach(utente -> set.add(utente.buildUtenteModel(false)));
+		}
+		
+		return result;
 	}
 
 	public static TavoloDTO buildTavoloDTOFromModel(Tavolo tavoloModel, boolean includeGiocatori) {
