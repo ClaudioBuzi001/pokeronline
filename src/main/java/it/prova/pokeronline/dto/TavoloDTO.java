@@ -109,6 +109,9 @@ public class TavoloDTO {
 			this.giocatori.forEach(utente -> set.add(utente.buildUtenteModel(false)));
 		}
 		
+		if(this.utenteCreazione != null)
+			result.setUtenteCreazione(this.utenteCreazione.buildUtenteModel(false));
+			
 		return result;
 	}
 
