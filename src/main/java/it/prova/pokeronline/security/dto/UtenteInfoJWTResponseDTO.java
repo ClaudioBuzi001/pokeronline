@@ -1,4 +1,4 @@
-package it.prova.raccoltafilmspringrest.security.dto;
+package it.prova.pokeronline.security.dto;
 
 import java.util.List;
 

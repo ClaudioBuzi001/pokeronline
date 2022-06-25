@@ -30,6 +30,12 @@ public class Ruolo {
 		this.codice = codice;
 	}
 
+	public Ruolo(Long id) {
+		super();
+		this.id = id;
+	}
+
+
 	public Ruolo() {
 		super();
 	}
