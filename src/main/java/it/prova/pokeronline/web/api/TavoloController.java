@@ -18,10 +18,8 @@ public class TavoloController {
 	
 	@GetMapping
 	public List<TavoloDTO> getAll() {
-		// senza DTO qui hibernate dava il problema del N + 1 SELECT
-		// (probabilmente dovuto alle librerie che serializzano in JSON)
-//		return RegistaDTO.createRegistaDTOListFromModelList(registaService.listAllElementsEager(), true);
-	
+		return TavoloDTO.createTavoloDTOListFromModelList(tavoloService.listAllElements(true), true);
+	}
 
 
 }
