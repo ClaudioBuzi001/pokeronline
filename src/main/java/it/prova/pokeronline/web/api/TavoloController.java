@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -22,6 +23,8 @@ import it.prova.pokeronline.service.TavoloService;
 import it.prova.pokeronline.service.UtenteService;
 import it.prova.pokeronline.web.api.exception.IdNotNullForInsertException;
 import it.prova.pokeronline.web.api.exception.TavoloNotFoundException;
+import it.prova.pokeronline.web.api.exception.UtenteCreazioneNonCorrispondenteAlPrecedente;
+import it.prova.pokeronline.web.api.exception.UtenteCreazioneNonValidoException;
 import it.prova.pokeronline.web.api.exception.UtenteCreazioneNotNullException;
 
 
@@ -70,6 +73,33 @@ public class TavoloController {
 		return TavoloDTO.buildTavoloDTOFromModel(tavoloInserito, false);
 	}
 
+
+	@PutMapping("/{id}")
+	public TavoloDTO update(@Valid @RequestBody TavoloDTO tavoloInput, @PathVariable(required = true) Long id) {
+		Tavolo tavolo = tavoloService.caricaSingoloElementoEager(id);
+
+		if (tavolo == null)
+			throw new TavoloNotFoundException("Tavolo not found con id: " + id);
+
+		/**
+		 * 1)NoN dobbiamo controllare che l'utenteCreazione sia lo stesso di quello che sta facendo l update, perche L update può essere fatto anche
+		 * da un admin, quindi l admin può modificare i tavoli di tutti. 
+		 * 
+		 * 2)Questa Volta però L' utenteCreazione non viene settato da sistema, quindi dobbiamo validarlo.
+		 * 
+		 * 3)NoN si può cambiare l' utenteCreazione quindi dobbiamo verificare che l' utenteCreazione Nuovo sia lo stesso di quello di prima.
+		 */
+		if(tavoloInput.getUtenteCreazione() == null || tavoloInput.getUtenteCreazione().getId() == null || tavoloInput.getUtenteCreazione().getId() < 1)
+			throw new UtenteCreazioneNonValidoException("UtenteCreazione non valid, inserire correttamente il campo UtenteCreazione");
+
+		//Per verificare il punto 3, confrontiamo l' id del utenteCreazione del tavolo caricato dal DB e l' id del utenteCreazione del tavoloInput
+		if(tavolo.getUtenteCreazione().getId() != tavoloInput.getUtenteCreazione().getId())
+			throw new UtenteCreazioneNonCorrispondenteAlPrecedente("Impossibile modificare L' UtenteCreazione inserendo un Utente Diverso, L' UtenteCreazione deve rimanere LO STESSO");
+		
+		tavoloInput.setId(id);
+		Tavolo tavoloAggiornato = tavoloService.aggiorna(tavoloInput.buildTavoloModel());
+		return TavoloDTO.buildTavoloDTOFromModel(tavoloAggiornato, false);
+	}
 
 }
 

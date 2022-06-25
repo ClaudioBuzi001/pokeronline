@@ -26,32 +26,27 @@ public class TavoloServiceImpl implements TavoloService {
 
 	@Override
 	public Tavolo caricaSingoloElemento(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		return repository.findById(id).orElse(null);
 	}
 
 	@Override
 	public Tavolo caricaSingoloElementoEager(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		return repository.findByIdEager(id) ;
 	}
 
 	@Override
 	public Tavolo aggiorna(Tavolo tavoloInstance) {
-		// TODO Auto-generated method stub
-		return null;
+		return repository.save(tavoloInstance);
 	}
 
 	@Override
 	public Tavolo inserisciNuovo(Tavolo tavoloInstance) {
-		// TODO Auto-generated method stub
-		return null;
+		return repository.save(tavoloInstance);
 	}
 
 	@Override
-	public void rimuovi(Tavolo tavoloInstance) {
-		// TODO Auto-generated method stub
-
+	public void rimuovi(Long id) {
+		repository.deleteById(id);
 	}
 
 }

@@ -16,7 +16,7 @@ public interface TavoloService {
 
 	Tavolo inserisciNuovo(Tavolo tavoloInstance);
 
-	void rimuovi(Tavolo tavoloInstance);
+	void rimuovi(Long id);
 	
 
 }
