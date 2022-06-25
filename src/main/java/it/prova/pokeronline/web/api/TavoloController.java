@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -80,7 +81,6 @@ public class TavoloController {
 
 		if (tavolo == null)
 			throw new TavoloNotFoundException("Tavolo not found con id: " + id);
-
 		/**
 		 * 1)NoN dobbiamo controllare che l'utenteCreazione sia lo stesso di quello che sta facendo l update, perche L update può essere fatto anche
 		 * da un admin, quindi l admin può modificare i tavoli di tutti. 
@@ -97,9 +97,23 @@ public class TavoloController {
 			throw new UtenteCreazioneNonCorrispondenteAlPrecedente("Impossibile modificare L' UtenteCreazione inserendo un Utente Diverso, L' UtenteCreazione deve rimanere LO STESSO");
 		
 		tavoloInput.setId(id);
-		Tavolo tavoloAggiornato = tavoloService.aggiorna(tavoloInput.buildTavoloModel());
+		Tavolo tavoloAggiornato = tavoloService.aggiorna(tavoloInput.buildTavoloModel(), tavolo);
 		return TavoloDTO.buildTavoloDTOFromModel(tavoloAggiornato, false);
 	}
+	
+	@DeleteMapping("/{id}")
+	@ResponseStatus(HttpStatus.OK)
+	public void delete(@PathVariable(required = true) Long id) {
+		/**
+		 * 1)Per questo Delete minimizziamo i RoundTrip provando a fare tutto nello stesso metodo.
+		 *   Il metodo rimuovi farà il tutto, E in caso di vari errori lancerà eccezioni diverse.
+		 * 
+		 * 2)Non abbiamo problemi nel dissociare le varie entità, in quanto l id di questa entità non è referenziata altrove
+		 */
+		tavoloService.rimuovi(id);
+		
+	}
+
 
 }
 
