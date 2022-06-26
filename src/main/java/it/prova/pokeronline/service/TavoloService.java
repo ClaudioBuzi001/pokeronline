@@ -24,5 +24,7 @@ public interface TavoloService {
 	
 	List<Tavolo> findByExampleSpecialPlayer(Tavolo example, Long id);
 	
+	List<Tavolo> findAllSpecialPlayer(String name);
+	
 
 }
