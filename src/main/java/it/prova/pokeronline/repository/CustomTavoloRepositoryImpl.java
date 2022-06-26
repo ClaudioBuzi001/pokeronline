@@ -6,16 +6,16 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import it.prova.pokeronline.model.Tavolo;
 
 public class CustomTavoloRepositoryImpl implements CustomTavoloRepository {
 
-	@Autowired
+	@PersistenceContext
 	private EntityManager entityManager;
 
 	/**

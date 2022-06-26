@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -97,4 +98,43 @@ public class UtenteServiceImpl implements UtenteService {
 		return repository.findByUsername(username).orElse(null);
 	}
 
+	@Override
+	@Transactional
+	public Integer compraCredito(Integer credito) {
+		//Mi carico l utente in  sessione, per passarlo come id all metodo del repository
+		Utente inSessione = repository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).get();
+		
+		if(inSessione.getCreditoAccumulato() == null)
+			inSessione.setCreditoAccumulato(credito);
+		else
+			inSessione.setCreditoAccumulato(inSessione.getCreditoAccumulato() + credito);
+		
+		repository.save(inSessione);
+		return inSessione.getCreditoAccumulato();
+	}
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
