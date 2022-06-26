@@ -118,4 +118,15 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(body, HttpStatus.UNPROCESSABLE_ENTITY);
 	}
 
+	@ExceptionHandler(NonSeiPresenteInNessunTavolo.class)
+	public ResponseEntity<Object> handleNonSeiPresenteInNessunTavolo(NonSeiPresenteInNessunTavolo ex, WebRequest request) {
+
+		Map<String, Object> body = new LinkedHashMap<>();
+		body.put("timestamp", LocalDateTime.now());
+		body.put("message", ex.getMessage());
+		body.put("status", HttpStatus.UNPROCESSABLE_ENTITY);
+
+		return new ResponseEntity<>(body, HttpStatus.UNPROCESSABLE_ENTITY);
+	}
+
 }

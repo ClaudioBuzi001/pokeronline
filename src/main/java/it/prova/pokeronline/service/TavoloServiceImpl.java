@@ -13,6 +13,7 @@ import it.prova.pokeronline.model.Tavolo;
 import it.prova.pokeronline.repository.TavoloRepository;
 import it.prova.pokeronline.repository.UtenteRepository;
 import it.prova.pokeronline.web.api.exception.GiocatoriPresentiException;
+import it.prova.pokeronline.web.api.exception.NonSeiPresenteInNessunTavolo;
 import it.prova.pokeronline.web.api.exception.TavoloNotFoundException;
 
 @Service
@@ -103,6 +104,18 @@ public class TavoloServiceImpl implements TavoloService {
 	@Transactional(readOnly = true)
 	public List<Tavolo> findAllSpecialPlayer(String name) {
 		return repository.findAllSpecialPlayer(utenteRepository.findByUsername(name).get().getId());
+	}
+
+	@Override
+	public Tavolo lastGame(Long id) {
+		//Se sono presente all interno di un tavolo returno il tavolo.
+		Tavolo result = repository.findByGiocatori_id(id).orElse(null);
+		
+		//Se non sono presente in nessun tavolo.
+		if(result == null)
+			throw new NonSeiPresenteInNessunTavolo("Attenzione, non sei stai giocando in nessun tavolo");
+		
+		return result;
 	}
 
 	

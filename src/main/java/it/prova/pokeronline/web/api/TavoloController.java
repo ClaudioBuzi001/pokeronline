@@ -62,8 +62,6 @@ public class TavoloController {
 		return TavoloDTO.buildTavoloDTOFromModelNoPassword(tavolo, true);
 	}
 
-	// gli errori di validazione vengono mostrati con 400 Bad Request ma
-	// elencandoli grazie al ControllerAdvice
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public TavoloDTO createNew(@Valid @RequestBody TavoloDTO tavoloInput) {

@@ -26,5 +26,6 @@ public interface TavoloService {
 	
 	List<Tavolo> findAllSpecialPlayer(String name);
 	
+	Tavolo lastGame(Long id);
 
 }
