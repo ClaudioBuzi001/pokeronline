@@ -32,5 +32,7 @@ public interface TavoloService {
 	Utente abbandonaPartita(Long idTavolo);
 	
 	List<Tavolo> findByExampleGame(Tavolo example);
+	
+	
 
 }

@@ -130,7 +130,7 @@ public class TavoloServiceImpl implements TavoloService {
 	@Transactional
 	public Utente abbandonaPartita(Long idTavolo) {
 		// Verifico che il tavolo esista.
-		Tavolo tavoloInstance = repository.findByIdEager(idTavolo);
+		Tavolo tavoloInstance = repository.findById(idTavolo).orElse(null);
 		if (tavoloInstance == null)
 			throw new TavoloNotFoundException("Tavolo con id: " + idTavolo + " not Found");
 

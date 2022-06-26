@@ -44,6 +44,8 @@ public class PokeronlineApplication implements CommandLineRunner {
 		if (admin == null) {
 			admin = new Utente("admin", "admin", "Mario", "Rossi");
 			admin.getRuoli().add(ruoloService.cercaPerDescrizioneECodice("Administrator", Ruolo.ROLE_ADMIN));
+			admin.setCreditoAccumulato(1);
+			admin.setEsperienzaAccumulata(1);
 
 			utenteService.inserisciNuovo(admin);
 			utenteService.changeUserAbilitation(admin.getId());
@@ -52,6 +54,8 @@ public class PokeronlineApplication implements CommandLineRunner {
 			Utente playerUser = new Utente("player", "player", "Antonio", "Verdi");
 			playerUser.getRuoli()
 					.add(ruoloService.cercaPerDescrizioneECodice("Player User", Ruolo.ROLE_PLAYER));
+			playerUser.setEsperienzaAccumulata(10);
+			playerUser.setCreditoAccumulato(0);
 
 			utenteService.inserisciNuovo(playerUser);
 			utenteService.changeUserAbilitation(playerUser.getId());
@@ -61,6 +65,8 @@ public class PokeronlineApplication implements CommandLineRunner {
 			specialUser = new Utente("special", "special", "Giovanni", "Bianchi");
 			specialUser.getRuoli().add(
 					ruoloService.cercaPerDescrizioneECodice("Special Player User", Ruolo.ROLE_SPECIAL_PLAYER));
+			specialUser.setCreditoAccumulato(10);
+			specialUser.setEsperienzaAccumulata(2);
 
 			utenteService.inserisciNuovo(specialUser);
 			utenteService.changeUserAbilitation(specialUser.getId());

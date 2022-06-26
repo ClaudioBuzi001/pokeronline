@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import it.prova.pokeronline.model.StatoUtente;
+import it.prova.pokeronline.model.Tavolo;
 import it.prova.pokeronline.model.Utente;
 import it.prova.pokeronline.repository.UtenteRepository;
 
@@ -48,7 +49,7 @@ public class UtenteServiceImpl implements UtenteService {
 		utenteReloaded.setUsername(utenteInstance.getUsername());
 		utenteReloaded.setRuoli(utenteInstance.getRuoli());
 		return repository.save(utenteReloaded);
-	}		
+	}
 
 	@Transactional
 	public void inserisciNuovo(Utente utenteInstance) {
@@ -65,7 +66,7 @@ public class UtenteServiceImpl implements UtenteService {
 
 	@Transactional(readOnly = true)
 	public List<Utente> findByExample(Utente example) {
-		//TODO DA IMPLEMENTARE
+		// TODO DA IMPLEMENTARE
 		return listAllUtenti();
 	}
 
@@ -101,40 +102,64 @@ public class UtenteServiceImpl implements UtenteService {
 	@Override
 	@Transactional
 	public Integer compraCredito(Integer credito) {
-		//Mi carico l utente in  sessione, per passarlo come id all metodo del repository
-		Utente inSessione = repository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).get();
-		
-		if(inSessione.getCreditoAccumulato() == null)
+		// Mi carico l utente in sessione, per passarlo come id all metodo del
+		// repository
+		Utente inSessione = repository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName())
+				.get();
+
+		if (inSessione.getCreditoAccumulato() == null)
 			inSessione.setCreditoAccumulato(credito);
 		else
 			inSessione.setCreditoAccumulato(inSessione.getCreditoAccumulato() + credito);
-		
+
 		repository.save(inSessione);
 		return inSessione.getCreditoAccumulato();
 	}
 
+	/**
+	 * Metodo che permette all' utente di inserirsi in una partita, specificando il
+	 * tavolo, e di giocare una mano.
+	 * 
+	 * @param Utente utente che sta giocando la partita.
+	 * @param Tavolo Il tavolo su cui l' utente sta giocando.
+	 * 
+	 * @return Utente L'untente con i dati aggiornati, dopo la partita.
+	 */
+	@Override
+	@Transactional
+	public Utente partecipaEGiocaPartita(Utente inSessione, Tavolo tavoloInstance) {
+		// Mi aggiunge all set di giocatori.
+		tavoloInstance.getGiocatori().add(inSessione);
+
+		// gioco la partita.
+		inSessione.setCreditoAccumulato(inSessione.getCreditoAccumulato() + UtenteServiceImpl.simulaPartita());
+		if (inSessione.getCreditoAccumulato() < 0)
+			inSessione.setCreditoAccumulato(0);
+
+		repository.save(inSessione);
+		return inSessione;
+	}
+
+	@Override
+	@Transactional
+	public Utente giocaPartita(Utente inSessione) {
+		inSessione.setCreditoAccumulato(inSessione.getCreditoAccumulato() + UtenteServiceImpl.simulaPartita());
+		if (inSessione.getCreditoAccumulato() < 0)
+			inSessione.setCreditoAccumulato(0);
+
+		repository.save(inSessione);
+		return inSessione;
+	}
+
+	private static Integer simulaPartita() {
+
+		Double segno = Math.random();
+		Double somma = 0.0;
+		if (segno >= 0.5)
+			somma = Math.random() * 1000;
+		else
+			somma = Math.random() * -1000;
+
+		return (int) (segno * somma.intValue());
+	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
