@@ -9,5 +9,7 @@ public interface CustomTavoloRepository {
 	List<Tavolo> findByExample(Tavolo example);
 	
 	List<Tavolo> findByExampleSpecialPlayer(Tavolo example, Long id);
+	
+	List<Tavolo> findByExampleGame(Tavolo example, Integer esperienzaAccomulata);
 
 }

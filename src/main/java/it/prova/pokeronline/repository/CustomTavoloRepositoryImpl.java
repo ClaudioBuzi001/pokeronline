@@ -76,7 +76,6 @@ public class CustomTavoloRepositoryImpl implements CustomTavoloRepository {
 	 * 
 	 * @return List<Tavolo> I tavoli corrispondenti all' example e appartententi all
 	 *         utente in sessione.
-	 * 
 	 */
 	@Override
 	public List<Tavolo> findByExampleSpecialPlayer(Tavolo example, Long id) {

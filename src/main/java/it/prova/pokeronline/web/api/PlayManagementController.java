@@ -11,11 +11,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import it.prova.pokeronline.dto.TavoloDTO;
-import it.prova.pokeronline.model.Tavolo;
+import it.prova.pokeronline.dto.UtenteDTO;
 import it.prova.pokeronline.model.Utente;
 import it.prova.pokeronline.service.TavoloService;
 import it.prova.pokeronline.service.UtenteService;
 import it.prova.pokeronline.web.api.exception.CreditoMinimoException;
+import it.prova.pokeronline.web.api.exception.NonFaiParteDiQuestoTavolo;
 
 @RestController
 @RequestMapping("api/play")
@@ -35,7 +36,7 @@ public class PlayManagementController {
 	 * @return Integer Il tuo credito attuale.
 	 */
 	@PostMapping("/compracredito/{credito}")
-	@ResponseStatus(HttpStatus.CREATED)
+	@ResponseStatus(HttpStatus.OK)
 	public Integer compraCredito(@PathVariable(value = "credito", required = true) Integer credito) {
 		// Controllo se il credito sia almeno 1
 		if (credito < 1)
@@ -55,6 +56,7 @@ public class PlayManagementController {
 	 * @return    Tavolo il tavolo in cui stai ancora giocando
 	 */
 	@GetMapping("/lastGame")
+	@ResponseStatus(HttpStatus.ACCEPTED)
 	public TavoloDTO dammiLastGame() {
 
 		Utente inSessione = utenteService
@@ -64,18 +66,26 @@ public class PlayManagementController {
 	}
 	
 	
-	/*
-	 * Abbandona Partita, Prendi il tavolo in cui sei prensente, dissoci il player dal set di giocatori
+	/**
+	 * Abbandona la partita nel tavolo specificato.
 	 * 
-	 * 1)Prendo il tavolo in cui sto giocando
+	 * @PostMethod  AbbandonaPartita Ti permette di Abbandonare la partita nel tavolo Specificato.
 	 * 
-	 * 2)Dissocio l id del utente Loggato dal dal set Di giocatori del tavolo
+	 * @param    Long    id Del tavolo che vuoi abbandonare.
 	 * 
-	 * 3)Mi aumento l esperienza
+	 * @return   UtenteDTO l' utente in sessione, con l' esperienza Aumentata.
 	 * 
-	 * 
+	 * @throws NonFaiParteDiQuestoTavoloException se non fai parte dell' tavolo specificato tramite id.
 	 */
-	@Post
+	@PostMapping("/abbandonaPartita/{idTavolo}")
+	@ResponseStatus(HttpStatus.OK)
+	public UtenteDTO abbandonaPartita(@PathVariable(value = "idTavolo", required = true) Long idTavolo) {
+		return UtenteDTO.buildUtenteDTOFromModel(tavoloService.abbandonaPartita(idTavolo));
+	}
+	
+	
+	
+	
 	
 	
 	

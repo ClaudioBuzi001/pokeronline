@@ -3,6 +3,7 @@ package it.prova.pokeronline.service;
 import java.util.List;
 
 import it.prova.pokeronline.model.Tavolo;
+import it.prova.pokeronline.model.Utente;
 
 public interface TavoloService {
 	
@@ -27,5 +28,9 @@ public interface TavoloService {
 	List<Tavolo> findAllSpecialPlayer(String name);
 	
 	Tavolo lastGame(Long id);
+	
+	Utente abbandonaPartita(Long idTavolo);
+	
+	List<Tavolo> findByExampleGame(Tavolo example);
 
 }
