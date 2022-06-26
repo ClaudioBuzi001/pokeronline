@@ -159,4 +159,39 @@ public class TavoloServiceImpl implements TavoloService {
 		return inSessione;
 	}
 
+	@Override
+	@Transactional(readOnly = true)
+	public List<Tavolo> findByExampleGame(Tavolo example) {
+		Utente inSessione = utenteRepository
+				.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).get();
+		
+		return repository.findByExampleGame(example, inSessione.getEsperienzaAccumulata());
+	}
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

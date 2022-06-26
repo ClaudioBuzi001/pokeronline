@@ -117,4 +117,65 @@ public class CustomTavoloRepositoryImpl implements CustomTavoloRepository {
 
 	}
 
+	/**
+	 * FindByExample per la ricerca della partita
+	 * 
+	 * @param Tavolo   Il tavolo da ricercare
+	 * @param Integer  L' esperienza Accomulata dall' utente
+	 * 
+	 * @return List<Tavolo> La lista di tavoli a cui l' utente Può accedere, Solo i tavoli in cui L' esperienza minima < Dell' esperienzaAccomulata
+	 */
+	@Override
+	public List<Tavolo> findByExampleGame(Tavolo example, Integer esperienzaAccomulata) {
+		Map<String, Object> paramaterMap = new HashMap<String, Object>();
+		List<String> whereClauses = new ArrayList<String>();
+
+		StringBuilder queryBuilder = new StringBuilder("select t from Tavolo t where t.id = t.id ");
+
+		if (StringUtils.isNotEmpty(example.getDenominazione())) {
+			whereClauses.add(" t.denominazione  like :denominazione ");
+			paramaterMap.put("denominazione", "%" + example.getDenominazione() + "%");
+		}
+		if (example.getCifraMinima() != null && example.getCifraMinima() > 0) {
+			whereClauses.add(" t.cifraMinima > :cifraMinima ");
+			paramaterMap.put("cifraMinima", example.getCifraMinima());
+		}
+		if (example.getDataCreazione() != null) {
+			whereClauses.add("t.dataCreazione>= :dataCreazione ");
+			paramaterMap.put("dataCreazione", example.getDataCreazione());
+		}
+
+		// Aggiungiamo la clausola dell' Esperienza minima
+		whereClauses.add(" t.esperienzaMinima <= :esperienzaAccomulata ");
+		paramaterMap.put("esperienzaAccomulata", esperienzaAccomulata);
+
+		queryBuilder.append(!whereClauses.isEmpty() ? " and " : "");
+		queryBuilder.append(StringUtils.join(whereClauses, " and "));
+		TypedQuery<Tavolo> typedQuery = entityManager.createQuery(queryBuilder.toString(), Tavolo.class);
+
+		for (String key : paramaterMap.keySet()) {
+			typedQuery.setParameter(key, paramaterMap.get(key));
+		}
+
+		return typedQuery.getResultList();
+
+	}
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

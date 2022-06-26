@@ -1,11 +1,14 @@
 package it.prova.pokeronline.web.api;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,7 +19,6 @@ import it.prova.pokeronline.model.Utente;
 import it.prova.pokeronline.service.TavoloService;
 import it.prova.pokeronline.service.UtenteService;
 import it.prova.pokeronline.web.api.exception.CreditoMinimoException;
-import it.prova.pokeronline.web.api.exception.NonFaiParteDiQuestoTavolo;
 
 @RestController
 @RequestMapping("api/play")
@@ -65,7 +67,6 @@ public class PlayManagementController {
 		return TavoloDTO.buildTavoloDTOFromModel(tavoloService.lastGame(inSessione.getId()), false);
 	}
 	
-	
 	/**
 	 * Abbandona la partita nel tavolo specificato.
 	 * 
@@ -83,6 +84,16 @@ public class PlayManagementController {
 		return UtenteDTO.buildUtenteDTOFromModel(tavoloService.abbandonaPartita(idTavolo));
 	}
 	
+	
+	/**
+	 * Ricerca Partita Solo i tavoli esperienza minima <= esperienza accumulata
+	 *
+	 * @return La lista dei tavoli cui l' utente può accedere.
+	 */
+	@GetMapping("/ricerca")
+	public List<TavoloDTO> ricercaPartita(@RequestBody TavoloDTO example){
+		return TavoloDTO.createTavoloDTOListFromModelList(tavoloService.findByExampleGame(example.buildTavoloModel()), false);
+	}
 	
 	
 	
