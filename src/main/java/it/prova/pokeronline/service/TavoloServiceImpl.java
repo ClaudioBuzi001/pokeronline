@@ -1,5 +1,6 @@
 package it.prova.pokeronline.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,10 @@ public class TavoloServiceImpl implements TavoloService {
 	@Override
 	@Transactional
 	public Tavolo inserisciNuovo(Tavolo tavoloInstance) {
+		//Se la data Creazione è null, setto da sistema la data di ora
+		if(tavoloInstance.getDataCreazione() == null)
+			tavoloInstance.setDataCreazione(new Date());
+		
 		return repository.save(tavoloInstance);
 	}
 
@@ -63,6 +68,21 @@ public class TavoloServiceImpl implements TavoloService {
 			throw new GiocatoriPresentiException("Impossibile eliminare questo Tavolo, sono ancora presenti dei giocatori al suo interno");
 		
 		repository.deleteById(id);
+	}
+
+	@Override
+	public Tavolo cercaPerDenominazione(String denominazione) {
+		return repository.findByDenominazione(denominazione);
+	}
+
+	@Override
+	public List<Tavolo> findByExample(Tavolo example) {
+		return repository.findByExample(example);
+	}
+
+	@Override
+	public List<Tavolo> findByExampleSpecialPlayer(Tavolo example, Long id) {
+		return repository.findByExampleSpecialPlayer(example, id);
 	}
 
 	

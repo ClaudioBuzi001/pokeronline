@@ -18,5 +18,11 @@ public interface TavoloService {
 
 	void rimuovi(Long id);
 	
+	Tavolo cercaPerDenominazione(String denominazione);
+	
+	List<Tavolo> findByExample(Tavolo example);
+	
+	List<Tavolo> findByExampleSpecialPlayer(Tavolo example, Long id);
+	
 
 }

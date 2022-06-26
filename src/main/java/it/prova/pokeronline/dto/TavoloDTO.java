@@ -27,7 +27,6 @@ public class TavoloDTO {
 	private Integer cifraMinima;
 	@NotBlank(message= "{denominazione.notblank}")
 	private String denominazione;
-	@NotNull(message = "{dataCreazione.notnull}")
 	private Date dataCreazione;
 	private Set<UtenteDTO> giocatori = new HashSet<UtenteDTO>(0);
 	private UtenteDTO utenteCreazione;
@@ -131,12 +130,29 @@ public class TavoloDTO {
 
 		return result;
 	}
+	
+	public static TavoloDTO buildTavoloDTOFromModelNoPassword(Tavolo tavoloModel, boolean includeGiocatori) {
+
+		TavoloDTO result = new TavoloDTO(tavoloModel.getId(), tavoloModel.getEsperienzaMinima(),
+				tavoloModel.getCifraMinima(), tavoloModel.getDenominazione(), tavoloModel.getDataCreazione());
+
+		if (tavoloModel.getUtenteCreazione() != null && tavoloModel.getUtenteCreazione().getId() != null
+				&& tavoloModel.getUtenteCreazione().getId() > 0) {
+			result.setUtenteCreazione(UtenteDTO.buildUtenteDTOFromModelNoPassword(tavoloModel.getUtenteCreazione()));
+		}
+
+		if (tavoloModel.getGiocatori() != null && !tavoloModel.getGiocatori().isEmpty()) {
+			result.setGiocatori(UtenteDTO.buildUtenteDTOSetFromModelSet(tavoloModel.getGiocatori()));
+		}
+
+		return result;
+	}
 
 	public static List<TavoloDTO> createTavoloDTOListFromModelList(List<Tavolo> modelListInput,
 			boolean includeGiocatori) {
 
 		return modelListInput.stream().map(tavoloEntity -> {
-			TavoloDTO result = TavoloDTO.buildTavoloDTOFromModel(tavoloEntity, includeGiocatori);
+			TavoloDTO result = TavoloDTO.buildTavoloDTOFromModelNoPassword(tavoloEntity, includeGiocatori);
 
 			if (includeGiocatori)
 				result.setGiocatori(UtenteDTO.buildUtenteDTOSetFromModelSet(tavoloEntity.getGiocatori()));

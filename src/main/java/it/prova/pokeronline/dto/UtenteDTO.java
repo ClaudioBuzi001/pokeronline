@@ -54,11 +54,23 @@ public class UtenteDTO {
 	}
 
 	public UtenteDTO(Long id, String username, String password, String nome, String cognome, Date dataRegistrazione,
-			StatoUtente stato, Integer esperienzaAccumulata, Integer creditoAccumulato ) {
+			StatoUtente stato, Integer esperienzaAccumulata, Integer creditoAccumulato) {
 		super();
 		this.id = id;
 		this.username = username;
 		this.password = password;
+		this.nome = nome;
+		this.cognome = cognome;
+		this.dataRegistrazione = dataRegistrazione;
+		this.esperienzaAccumulata = esperienzaAccumulata;
+		this.creditoAccumulato = creditoAccumulato;
+		this.stato = stato;
+	}
+	public UtenteDTO(Long id, String username, String nome, String cognome, Date dataRegistrazione,
+			StatoUtente stato, Integer esperienzaAccumulata, Integer creditoAccumulato) {
+		super();
+		this.id = id;
+		this.username = username;
 		this.nome = nome;
 		this.cognome = cognome;
 		this.dataRegistrazione = dataRegistrazione;
@@ -168,12 +180,24 @@ public class UtenteDTO {
 		return result;
 	}
 
+	public static UtenteDTO buildUtenteDTOFromModelNoPassword(Utente utenteModel) {
+		UtenteDTO result = new UtenteDTO(utenteModel.getId(), utenteModel.getUsername(), utenteModel.getNome(),
+				utenteModel.getCognome(), utenteModel.getDateRegistrazione(), utenteModel.getStato(),
+				utenteModel.getEsperienzaAccumulata(), utenteModel.getCreditoAccumulato());
+
+		if (!utenteModel.getRuoli().isEmpty())
+			result.ruoliIds = utenteModel.getRuoli().stream().map(r -> r.getId()).collect(Collectors.toList())
+					.toArray(new Long[] {});
+
+		return result;
+	}
+
 	public static List<UtenteDTO> buildUtenteDTOListFromModelList(List<Utente> modelList) {
 		return modelList.stream().map(entity -> UtenteDTO.buildUtenteDTOFromModel(entity)).collect(Collectors.toList());
 	}
 
 	public static Set<UtenteDTO> buildUtenteDTOSetFromModelSet(Set<Utente> modelList) {
-		return (Set<UtenteDTO>) modelList.stream().map(entity -> UtenteDTO.buildUtenteDTOFromModel(entity))
+		return (Set<UtenteDTO>) modelList.stream().map(entity -> UtenteDTO.buildUtenteDTOFromModelNoPassword(entity))
 				.collect(Collectors.toSet());
 	}
 

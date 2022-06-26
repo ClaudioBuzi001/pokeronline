@@ -73,8 +73,6 @@ public class Utente {
 		this.creditoAccumulato = creditoAccumulato;
 	}
 
-
-	
 	public Utente(String username, String password, String nome, String cognome, Date dateRegistrazione,
 			Integer esperienzaAccumulata, Integer creditoAccumulato, StatoUtente stato, Set<Ruolo> ruoli) {
 		super();
@@ -89,27 +87,35 @@ public class Utente {
 		this.ruoli = ruoli;
 	}
 
-//	this.id, this.username, this.password, this.nome, this.cognome,
-//	this.dataRegistrazione, this.creditoAccumulato, this.esperienzaAccumulata, this.stato
-	
-	
+	public Utente(Long id, String username, String password, String nome, String cognome, Date dateRegistrazione,
+			Integer creditoAccumulato, Integer esperienzaAccumulata, StatoUtente stato) {
+		super();
+		this.id = id;
+		this.username = username;
+		this.password = password;
+		this.nome = nome;
+		this.cognome = cognome;
+		this.dateRegistrazione = dateRegistrazione;
+		this.esperienzaAccumulata = esperienzaAccumulata;
+		this.creditoAccumulato = creditoAccumulato;
+		this.stato = stato;
+	}
+
+	public Utente(String username, String password, String nome, String cognome) {
+		super();
+		this.username = username;
+		this.password = password;
+		this.nome = nome;
+		this.cognome = cognome;
+	}
+
+	public Utente() {
+		super();
+	}
+
 	public Long getId() {
 		return id;
 	}
-
-	public Utente(Long id, String username, String password, String nome, String cognome, Date dateRegistrazione, Integer creditoAccumulato,
-		Integer esperienzaAccumulata,  StatoUtente stato) {
-	super();
-	this.id = id;
-	this.username = username;
-	this.password = password;
-	this.nome = nome;
-	this.cognome = cognome;
-	this.dateRegistrazione = dateRegistrazione;
-	this.esperienzaAccumulata = esperienzaAccumulata;
-	this.creditoAccumulato = creditoAccumulato;
-	this.stato = stato;
-}
 
 	public void setId(Long id) {
 		this.id = id;
@@ -186,7 +192,7 @@ public class Utente {
 	public void setRuoli(Set<Ruolo> ruoli) {
 		this.ruoli = ruoli;
 	}
-	
+
 	public boolean isAdmin() {
 		for (Ruolo ruoloItem : ruoli) {
 			if (ruoloItem.getCodice().equals(Ruolo.ROLE_ADMIN))

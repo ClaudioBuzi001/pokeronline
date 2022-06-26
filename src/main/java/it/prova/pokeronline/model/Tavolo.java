@@ -20,11 +20,6 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "tavolo")
 public class Tavolo {
-//	Tavolo (sarebbe la partita) coi campi esperienzaMin (cioè il minimo 
-//			dell’esperienzaAccumulata che gli utenti devono possedere per poter giocare a quel 
-//			tavolo), cifraMinima (il minimo valore di denaro che si deve possedere per giocare a quel 
-//			tavolo), denominazione …., data creazione…..
-//			Set di Utente (i giocatori) ed un Utente utenteCreazione che è colui che ha creato il tavolo.
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -69,6 +64,14 @@ public class Tavolo {
 		this.cifraMinima = cifraMinima;
 		this.denominazione = denominazione;
 		this.dataCreazione = dataCreazione;
+	}
+	
+
+	public Tavolo(String denominazione, Integer esperienzaMinima, Integer cifraMinima) {
+		super();
+		this.esperienzaMinima = esperienzaMinima;
+		this.cifraMinima = cifraMinima;
+		this.denominazione = denominazione;
 	}
 
 	public Long getId() {
